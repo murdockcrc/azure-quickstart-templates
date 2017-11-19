@@ -1,0 +1,51 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "subscriptionId": {
+            "value": "{REPLACE}"
+        },
+        "resourceGroupName": {
+            "value": "{REPLACE}"
+        },
+        "name": {
+            "value": "{REPLACE}"
+        },
+        "location": {
+            "value": "{REPLACE}"
+        },
+        "skuName": {
+            "value": "S1"
+        },
+        "skuTier": {
+            "value": "standard"
+        },
+        "skuSize": {
+            "value": "1"
+        },
+        "skuCapacity": {
+            "value": "1"
+        },
+        "dataRetentionTime": {
+            "value": "P31D"
+        },
+        "principalObjectId": {
+            "value": "{REPLACE}"
+        },
+        "eventSourceName": {
+            "value": "{REPLACE}"
+        },
+        "serviceBusNamespace": {
+            "value": "{REPLACE}"
+        },
+        "eventHubName": {
+            "value": "{REPLACE}"
+        },
+        "eventHubKeyName": {
+            "value": "{REPLACE}"
+        },
+        "eventHubConsumerGroupName": {
+            "value": "{REPLACE}"
+        }
+    }
+  }

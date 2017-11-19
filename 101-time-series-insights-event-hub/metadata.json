@@ -1,0 +1,7 @@
+{
+	"itemDisplayName": "Deploy a new Time Series Insights environment",
+	"description": "This template allows you to create a new Time Series Insights environment, add an AAD security principal to the access policies, and create an Event Source (Event Hub)",
+	"summary": "Deploy a new Time Series Insights environment",
+	"githubUsername": "murdockcrc",
+	"dateUpdated": "2017-11-19"
+}

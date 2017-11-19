@@ -1,0 +1,160 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "subscriptionId": {
+            "type": "string",
+            "metadata": {
+                "description": "The Id of your Azure subscription"
+            }
+        },
+        "resourceGroupName": {
+            "type": "string",
+            "metadata": {
+                "description": "The resource group name where the deployment should be conducted"
+            }
+        },
+        "name": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the TSI environment to create"
+            }
+        },
+        "location": {
+            "type": "string",
+            "metadata": {
+                "description": "Region where the deployment should be made"
+            }
+        },
+        "skuName": {
+            "type": "string",
+            "defaultValue": "S1",
+            "metadata": {
+                "description": "The TSI SKU to use"
+            }
+        },
+        "skuTier": {
+            "type": "string",
+            "defaultValue": "standard",
+            "metadata": {
+                "description": "The tier you want to use for your TSI environment"
+            }
+        },
+        "skuSize": {
+            "type": "string",
+            "defaultValue": "1",
+            "metadata": {
+                "description": "The size you want to provision to the TSI environment"
+            }
+        },
+        "skuCapacity": {
+            "type": "string",
+            "defaultValue": "1",
+            "metadata": {
+                "description": "The capacity units you want to provision for your TSI environment"
+            }
+        },
+        "dataRetentionTime": {
+            "type": "string",
+            "defaultValue": "P31D",
+            "metadata": {
+                "description": "The period of time for TSI to keep your historical data in the database"
+            }
+        },
+        "principalObjectId": {
+            "type": "string",
+            "metadata": {
+                "description": "The principal object Id of the Azure Active Directory user that should be granted access to the environment"
+            }
+        },        
+        "eventSourceName": {
+            "type": "string",
+            "metadata": {
+                "description": "The name you want to give to this new TSI event source"
+            }
+        },
+        "serviceBusNamespace": {
+            "type": "string",
+            "metadata": {
+                "description": "The namespace of the Event Hub you want to have as an Event Source for TSI"
+            }
+        },
+        "eventHubName": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of the Event Hub"
+            }
+        },
+        "eventHubKeyName": {
+            "type": "string",
+            "metadata": {
+                "description": "The nameof the shared access policy key for Event Hub which TSI should use to access the Event Hub"
+            }
+        },
+        "eventHubConsumerGroupName": {
+            "type": "string",
+            "defaultValue": "$Default",
+            "metadata": {
+                "description": "The name of the Consumer Group you want TSI to use. It is highly recommended that you create a CG for TSI instead of using the default one"
+            }
+        },
+        "eventHubAccessKey": {
+            "type": "string",
+            "metadata": {
+                "description": "The key to access the Event Hub"
+            }
+        }
+    },
+    "resources": [
+        {
+            "apiVersion": "2017-02-28-preview",
+            "name": "[parameters('name')]",
+            "location": "[parameters('location')]",
+            "type": "Microsoft.TimeSeriesInsights/environments",
+            "sku": {
+                "name": "[parameters('skuName')]",
+                "tier": "[parameters('skuTier')]",
+                "size": "[parameters('skuSize')]",
+                "capacity": "[parameters('skuCapacity')]"
+            },
+            "properties": {
+                "dataRetentionTime": "[parameters('dataRetentionTime')]"
+            },
+            "resources": [                
+                {
+                    "apiVersion": "2017-02-28-preview",
+                    "name": "accessPolicyName",
+                    "type": "accesspolicies",
+                    "properties": {
+                        "principalObjectId": "[parameters('principalObjectId')]",
+                        "roles": [
+                            "Reader",
+                            "Contributor"
+                        ]
+                    },
+                    "dependsOn": [
+                        "[concat('Microsoft.TimeSeriesInsights/environments/', parameters('name'))]"
+                    ]
+                },
+                {
+                    "apiVersion": "2017-02-28-preview",
+                    "name": "[concat(parameters('name'), '/', parameters('eventSourceName'))]",
+                    "type": "Microsoft.TimeSeriesInsights/Environments/EventSources",
+                    "kind": "Microsoft.EventHub",
+                    "location": "[parameters('location')]",
+                    "properties": {
+                        "serviceBusNamespace": "[parameters('serviceBusNamespace')]",
+                        "eventHubName": "[parameters('eventHubName')]",
+                        "keyName": "[parameters('eventHubKeyName')]",
+                        "consumerGroupName": "[parameters('eventHubConsumerGroupName')]",
+                        "sharedAccessKey": "[parameters('eventHubAccessKey')]",
+                        "eventSourceResourceId": "[concat('/subscriptions/', parameters('subscriptionId'), '/resourceGroups/', parameters('resourceGroupName'), '/providers/Microsoft.EventHub/namespaces/', parameters('serviceBusNamespace'), '/eventhubs/', parameters('eventHubName'))]"
+                    },
+                    "dependsOn": [
+                        "[concat('Microsoft.TimeSeriesInsights/environments/', parameters('name'))]"
+                    ]
+                }
+            ]
+        }
+    ]
+}
