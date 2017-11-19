@@ -1,6 +1,6 @@
 # Azure Time Series Insights ARM deployment
 
-[![Deploy to Azure](https://azuredeploy.net/deploybutton.svg)](https://azuredeploy.net/?repository=https://github.com/Azure/azure-quickstart-templates/tree/luisdel-tsi)
+[![Deploy to Azure](https://azuredeploy.net/deploybutton.svg)](https://azuredeploy.net/?repository=https://github.com/murdockcrc/azure-quickstart-templates/tree/luisdel-tsi)
 
 Use these automation scripts to automate the deployment and configuration of a TSI (Time Series Insights) environment.
 
